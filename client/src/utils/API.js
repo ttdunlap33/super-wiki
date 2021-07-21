@@ -75,5 +75,14 @@ export const searchGoogleBooks = (query) => {
     //   limit: 6,
     // },
 
-    return fetch(`https://superheroapi.com/api/4143178869133177/search/${query}`);
+    // return $.ajax({
+    //   url: `https://superheroapi.com/api/4143178869133177/search/${query}`,
+    //   type: "GET",
+    //   crossDomain: true,
+    //   dataType: "json",
+    // })
+    query = query.replace(/\s+/g, '-').toLowerCase();
+    console.log(query); // "sonic-free-games"
+
+    return fetch(`https://api.rawg.io/api/games/${query}?key=00c0301752f8469e917d550c6ce3fb22`);
 };

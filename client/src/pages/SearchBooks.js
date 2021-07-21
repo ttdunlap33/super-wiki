@@ -30,28 +30,52 @@ const SearchBooks = () => {
 
     try {
       const response = await searchGoogleBooks(searchInput);
+      console.log(response);
 
       if (!response.ok) {
         console.log(response)
         throw new Error('something went wrong!');
       }
 
-      const { items } = await response.json();
+      // var body = await response.json();
+      // console.log(body);
+
+      var body = [await response.json()];
+
+      // const { items } = await response.json();
+
+      // console.log(items)
 
       // console.log(items);
 
-      console.log(items);
+      // var gameData = {
+      //   gameId: body.id,
+      //   name: body.name, 
+      //   description: body.description,
+      //   image: body.background_image,
+      //   second_image: body.background_image_additional,
+      // };
 
-      const bookData = items.map((book) => ({
-        bookId: book.id,
-        authors: book.volumeInfo.authors || ['No author to display'],
-        title: book.volumeInfo.title,
-        description: book.volumeInfo.description,
-        image: book.volumeInfo.imageLinks?.thumbnail || '',
-        link: book.volumeInfo.infoLink,
+      const gameData = body.map((game) => ({
+        gameId: game.id,
+        name: game.name, 
+        description: game.description,
+        image: game.background_image,
+        second_image: game.background_image_additional,
+        link: game.website.infoLink,
       }));
 
-      setSearchedBooks(bookData);
+      // const bookData = items.map((book) => ({
+      //   bookId: book.id,
+      //   authors: book.volumeInfo.authors || ['No author to display'],
+      //   title: book.volumeInfo.title,
+      //   description: book.volumeInfo.description,
+      //   image: book.volumeInfo.imageLinks?.thumbnail || '',
+      //   link: book.volumeInfo.infoLink,
+      // }));
+
+      // setSearchedBooks(bookData);
+      setSearchedBooks(gameData);
       setSearchInput('');
     } catch (err) {
       console.error(err);
@@ -86,9 +110,9 @@ const SearchBooks = () => {
 
   return (
     <>
-      <Jumbotron fluid className='text-light bg-dark'>
+      <Jumbotron fluid className='text-light bg-warning'>
         <Container>
-          <h1>Search for Books!</h1>
+          <h1>Search for Games!</h1>
           <Form onSubmit={handleFormSubmit}>
             <Form.Row>
               <Col xs={12} md={8}>
@@ -98,11 +122,11 @@ const SearchBooks = () => {
                   onChange={(e) => setSearchInput(e.target.value)}
                   type='text'
                   size='lg'
-                  placeholder='Search for a book'
+                  placeholder='Search for a video game'
                 />
               </Col>
               <Col xs={12} md={4}>
-                <Button type='submit' variant='success' size='lg'>
+                <Button type='submit' variant='info' size='lg'>
                   Submit Search
                 </Button>
               </Col>
@@ -112,29 +136,28 @@ const SearchBooks = () => {
       </Jumbotron>
 
       <Container>
-        <h2>
+        <h3>
           {searchedBooks.length
-            ? `Viewing ${searchedBooks.length} results:`
-            : 'Search for a book to begin'}
-        </h2>
+            ? `Viewing your results:`
+            : ''}
+        </h3>
         <CardColumns>
-          {searchedBooks.map((book) => {
+          {searchedBooks.map((game) => {
             return (
-              <Card key={book.bookId} border='dark'>
-                {book.image ? (
-                  <Card.Img src={book.image} alt={`The cover for ${book.title}`} variant='top' />
+              <Card key={game.gameId} border='dark'>
+                {game.image ? (
+                  <Card.Img src={game.image} alt={`The cover for ${game.name}`} variant='top' />
                 ) : null}
                 <Card.Body>
-                  <Card.Title>{book.title}</Card.Title>
-                  <p className='small'>Authors: {book.authors}</p>
-                  <Card.Text>{book.description}</Card.Text>
-                  <a href={book.link} target="_blank">Link</a>
+                  <Card.Title>{game.name}</Card.Title>
+                  <Card.Text>{game.description}</Card.Text>
+                  <a href={game.link} target="_blank">Link</a>
                   {Auth.loggedIn() && (
                     <Button
-                      disabled={savedBookIds?.some((savedBookId) => savedBookId === book.bookId)}
+                      disabled={savedBookIds?.some((savedBookId) => savedBookId === game.gameId)}
                       className='btn-block btn-info'
-                      onClick={() => handleSaveBook(book.bookId)}>
-                      {savedBookIds?.some((savedBookId) => savedBookId === book.bookId)
+                      onClick={() => handleSaveBook(game.gameId)}>
+                      {savedBookIds?.some((savedBookId) => savedBookId === game.gameId)
                         ? 'You saved this book!'
                         : 'Save this Book!'}
                     </Button>

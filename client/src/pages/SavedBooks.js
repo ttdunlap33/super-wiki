@@ -69,14 +69,14 @@ const SavedBooks = () => {
     <>
       <Jumbotron fluid className='text-light bg-dark'>
         <Container>
-          <h1>Viewing saved books!</h1>
+          <h1>Viewing saved Video Games!</h1>
         </Container>
       </Jumbotron>
       <Container>
         <h2>
           {userData.savedBooks.length
-            ? `Viewing ${userData.savedBooks.length} saved ${userData.savedBooks.length === 1 ? 'book' : 'books'}:`
-            : 'You have no saved books!'}
+            ? `Viewing ${userData.savedBooks.length} saved ${userData.savedBooks.length === 1 ? 'video game' : 'video games'}:`
+            : 'You have no saved video games!'}
         </h2>
         <CardColumns>
           {userData.savedBooks.map((book) => {
