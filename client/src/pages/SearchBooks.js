@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Jumbotron, Container, Col, Form, Button, Card, CardColumns } from 'react-bootstrap';
+import { Jumbotron, Container, Col, Form, Button, Card, CardColumns, Row, CardGroup } from 'react-bootstrap';
 
 import Auth from '../utils/auth';
 import { saveBook, searchGoogleBooks } from '../utils/API';
@@ -7,7 +7,7 @@ import { saveBookIds, getSavedBookIds } from '../utils/localStorage';
 
 const SearchBooks = () => {
   // create state for holding returned google api data
-  const [searchedBooks, setSearchedBooks] = useState([]);
+  const [searchedBooks, setSearchedBooks] = useState(null);
   // create state for holding our search field data
   const [searchInput, setSearchInput] = useState('');
 
@@ -34,13 +34,16 @@ const SearchBooks = () => {
 
       if (!response.ok) {
         console.log(response)
-        throw new Error('something went wrong!');
+        setSearchedBooks([]);
       }
-
-      // var body = await response.json();
+      else {
+        // var body = await response.json();
       // console.log(body);
 
-      var body = [await response.json()];
+      // var body = [await response.json()];
+      var json = await response.json();
+      console.log(json);
+      const body = json.results;
 
       // const { items } = await response.json();
 
@@ -60,10 +63,27 @@ const SearchBooks = () => {
         gameId: game.id,
         name: game.name, 
         description: game.description,
+        metacritic: game.metacritic,
+        released: game.released,
         image: game.background_image,
-        second_image: game.background_image_additional,
-        link: game.website.infoLink,
+        website: game.website,
+        esrb_rating: (game.esrb_rating) ? game.esrb_rating.name : null,
+        platforms: game.platforms,
+        genres: game.genres,
+        developers: game.developers
       }));
+
+      // game id
+      // name vs. name_original
+      // description
+      // metacritic (metacritic_url) vs. rating
+      // released
+      // background_image and background_image_additional
+      // website
+      // esrb_rating
+      // platforms (concat)
+      // genre (concat)
+      // developer
 
       // const bookData = items.map((book) => ({
       //   bookId: book.id,
@@ -77,6 +97,7 @@ const SearchBooks = () => {
       // setSearchedBooks(bookData);
       setSearchedBooks(gameData);
       setSearchInput('');
+      }
     } catch (err) {
       console.error(err);
     }
@@ -108,6 +129,42 @@ const SearchBooks = () => {
     }
   };
 
+  const handleDescription = async (gameId) => {
+    console.log(gameId);
+    const response = await fetch(`https://api.rawg.io/api/games/${gameId}?key=00c0301752f8469e917d550c6ce3fb22`)
+    const body = await response.json();
+    // window.alert(body.description);
+
+    var modal = document.getElementById("myModal");
+    var content = document.getElementById("myDescription");
+    content.innerHTML = body.description;
+
+    // Get the button that opens the modal
+    // var btn = document.getElementById("myBtn");
+
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+
+    // When the user clicks the button, open the modal 
+    // btn.onclick = function() {
+    //   ;
+    // }
+
+    modal.style.display = "block"
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+      modal.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    }
+  }
+
   return (
     <>
       <Jumbotron fluid className='text-light bg-warning'>
@@ -136,13 +193,19 @@ const SearchBooks = () => {
       </Jumbotron>
 
       <Container>
+      <div id="myModal" class="modal">
+        <div class="modal-content">
+          <span class="close">&times;</span>
+          <p id="myDescription"></p>
+        </div>
+      </div>
         <h3>
-          {searchedBooks.length
-            ? `Viewing your results:`
-            : ''}
+          {searchedBooks ? searchedBooks.length ? 
+            `Viewing your results:` : `No games found.`
+            : ``}
         </h3>
         <CardColumns>
-          {searchedBooks.map((game) => {
+          {searchedBooks ? searchedBooks.map((game) => {
             return (
               <Card key={game.gameId} border='dark'>
                 {game.image ? (
@@ -150,22 +213,30 @@ const SearchBooks = () => {
                 ) : null}
                 <Card.Body>
                   <Card.Title>{game.name}</Card.Title>
-                  <Card.Text>{game.description}</Card.Text>
-                  <a href={game.link} target="_blank">Link</a>
+                  <p>{game.metacritic}</p>
+                  <p>{game.released}</p>
+                  <p>{game.esrb_rating}</p>
+                  <p>{game.description}</p>
+                  <a href={game.website} target="_blank">Link</a>
+                  <Button
+                      className='btn-block btn-info'
+                      onClick={() => handleDescription(game.gameId, null)}>
+                      Description
+                    </Button>
                   {Auth.loggedIn() && (
-                    <Button
+                    <Button 
                       disabled={savedBookIds?.some((savedBookId) => savedBookId === game.gameId)}
                       className='btn-block btn-info'
                       onClick={() => handleSaveBook(game.gameId)}>
                       {savedBookIds?.some((savedBookId) => savedBookId === game.gameId)
-                        ? 'You saved this book!'
-                        : 'Save this Book!'}
+                        ? 'You saved this game!'
+                        : 'Save this Game!'}
                     </Button>
                   )}
                 </Card.Body>
               </Card>
             );
-          })}
+          }) : null}
         </CardColumns>
       </Container>
     </>
@@ -173,3 +244,13 @@ const SearchBooks = () => {
 };
 
 export default SearchBooks;
+
+// {searchedBooks ? searchedBooks.map((game) => {
+//   return (
+//     <Card key={game.gameId} border='dark'>
+//       <Card.Body>
+//         <Card.Text>{game.description}</Card.Text>
+//       </Card.Body>
+//     </Card>
+//   );
+// }) : null}
