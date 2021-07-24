@@ -70,4 +70,11 @@ module.exports = {
     }
     return res.json(updatedUser);
   },
+
+  async getGame({params}, res) {
+    console.log(params);
+    const API_KEY = process.env.REACT_APP_API_KEY;
+    const data = fetch(`https://api.rawg.io/api/games?key=${API_KEY}&search=${params}&search_precise=false`);
+    return res.json(data);
+  }
 };

@@ -81,11 +81,18 @@ export const searchGoogleBooks = (query) => {
     //   crossDomain: true,
     //   dataType: "json",
     // })
-    query = query.replace(/\s+/g, '-').toLowerCase();
-    console.log(query); // "sonic-free-games"
+    // query = query.replace(/\s+/g, '-').toLowerCase();
+    // console.log(query); // "sonic-free-games"
 
-    const API_KEY = process.env.REACT_APP_API_KEY
-    console.log(API_KEY)
+    // const API_KEY = process.env.REACT_APP_API_KEY
+    // console.log(API_KEY)
 
-    return fetch(`https://api.rawg.io/api/games?key=${API_KEY}&search=${query}&search_precise=false`);
+    // return fetch(`https://api.rawg.io/api/games?key=${API_KEY}&search=${query}&search_precise=false`);
+
+    return fetch(`/api/users/books/${query}`, {
+      method: 'GET',
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
+    });
 };
