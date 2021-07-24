@@ -70,11 +70,13 @@ const SearchBooks = () => {
       // console.log(gameData[0].genres);
       // console.log(gameData[0].platforms);
       gameData.forEach(function (game) {
-        var allGenres = "";
-        game.genres.forEach(function (genre) {
-          allGenres += genre.name + ", ";
-        });
-        game.genres = allGenres.substring(0, allGenres.length - 2);
+        if (game.genres) {
+          var allGenres = "";
+          game.genres.forEach(function (genre) {
+            allGenres += genre.name + ", ";
+          });
+          game.genres = allGenres.substring(0, allGenres.length - 2);
+        }
 
         if (game.platforms) {
           var allPlatforms = "";
