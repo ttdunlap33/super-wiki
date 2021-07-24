@@ -84,5 +84,8 @@ export const searchGoogleBooks = (query) => {
     query = query.replace(/\s+/g, '-').toLowerCase();
     console.log(query); // "sonic-free-games"
 
-    return fetch(`https://api.rawg.io/api/games?key=${REACT_APP_API_KEY}&search=${query}&search_precise=false`);
+    const API_KEY = process.env.REACT_APP_API_KEY
+    console.log(API_KEY)
+
+    return fetch(`https://api.rawg.io/api/games?key=${API_KEY}&search=${query}&search_precise=false`);
 };
