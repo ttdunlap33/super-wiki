@@ -71,10 +71,18 @@ module.exports = {
     return res.json(updatedUser);
   },
 
-  async getGame({params}, res) {
+  async getGame({ params }, res) {
     console.log(params);
     const API_KEY = process.env.REACT_APP_API_KEY;
-    const data = fetch(`https://api.rawg.io/api/games?key=${API_KEY}&search=${params}&search_precise=false`);
+
+    var fetch = require('node-fetch');
+
+    console.log(process.env);
+
+    const url = `https://api.rawg.io/api/games?key=${API_KEY}&search=${params.query}&search_precise=false`
+    console.log(url);
+
+    const data = await fetch();
     return res.json(data);
   },
 };

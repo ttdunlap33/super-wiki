@@ -20,6 +20,6 @@ router.route('/me').get(authMiddleware, getSingleUser);
 
 router.route('/books/:bookId').delete(authMiddleware, deleteBook);
 
-router.route('/books/:query').get(getGame)
+router.route('/games/:query').get(getGame)
 
 module.exports = router;
