@@ -60,6 +60,35 @@ const SavedBooks = () => {
     }
   };
 
+  const handleDescription = async (gameId) => {
+    const response = await fetch(`https://api.rawg.io/api/games/${gameId}?key=00c0301752f8469e917d550c6ce3fb22`)
+    const body = await response.json();
+
+    var modal = document.getElementById("myModal");
+    var content = document.getElementById("myDescription");
+    content.innerHTML = body.description;
+
+    // Get the button that opens the modal
+    // var btn = document.getElementById("myBtn");
+
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+
+    modal.style.display = "block"
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+      modal.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    }
+  }
+
   // if data isn't here yet, say so
   if (!userDataLength) {
     return <h2>LOADING...</h2>;
@@ -67,32 +96,47 @@ const SavedBooks = () => {
 
   return (
     <>
-      <Jumbotron fluid className='text-light bg-dark'>
+      <Jumbotron fluid className='text-light bg-warning' style={{ backgroundImage: `url(screenshot.png)`, backgroundSize: 'cover' }}>
         <Container>
           <h1>Viewing saved Video Games!</h1>
         </Container>
       </Jumbotron>
       <Container>
+      <div id="myModal" class="customModal">
+        <div class="modal-content">
+          <span class="close">&times;</span>
+          <p id="myDescription"></p>
+        </div>
+      </div>
         <h2>
           {userData.savedBooks.length
             ? `Viewing ${userData.savedBooks.length} saved ${userData.savedBooks.length === 1 ? 'video game' : 'video games'}:`
             : 'You have no saved video games!'}
         </h2>
         <CardColumns>
-          {userData.savedBooks.map((book) => {
+          {userData.savedBooks.map((game) => {
             return (
-              <Card key={book.bookId} border='dark'>
-                {book.image ? <Card.Img src={book.image} alt={`The cover for ${book.title}`} variant='top' /> : null}
-                <Card.Body>
-                  <Card.Title>{book.title}</Card.Title>
-                  <p className='small'>Authors: {book.authors}</p>
-                  <Card.Text>{book.description}</Card.Text>
-                  <a href={book.link} target="_blank">Link</a>
-                  <Button className='btn-block btn-danger' onClick={() => handleDeleteBook(book.bookId)}>
-                    Delete this Book!
+              <Card key={game.gameId} border='dark'>
+              {game.image ? (
+                <Card.Img src={game.image} alt={`The cover for ${game.name}`} variant='top' />
+              ) : null}
+              <Card.Body>
+                <Card.Title>{game.name}</Card.Title>
+                {game.metacritic ? <p><b>Metacritic:</b> {game.metacritic}</p> : null }
+                {game.released ? <p><b>Released on:</b> {game.released}</p> : null}
+                {game.esrb_rating ? <p><b>ESRB Rating:</b> {game.esrb_rating}</p> : null}
+                {game.genres ? <p><b>Genres:</b> {game.genres}</p> : null}
+                {game.platforms ? <p><b>Platforms:</b> {game.platforms}</p> : null}
+                <Button
+                    className='btn-block btn-info'
+                    onClick={() => handleDescription(game.gameId)}>
+                    Description
                   </Button>
-                </Card.Body>
-              </Card>
+                <Button className='btn-block btn-danger' onClick={() => handleDeleteBook(game.gameId)}>
+                  Delete this Book!
+                </Button>
+              </Card.Body>
+            </Card>
             );
           })}
         </CardColumns>

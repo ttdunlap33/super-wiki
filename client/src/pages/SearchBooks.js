@@ -11,7 +11,7 @@ const SearchBooks = () => {
   // create state for holding our search field data
   const [searchInput, setSearchInput] = useState('');
 
-  // create state to hold saved bookId values
+  // create state to hold saved gameId values
   const [savedBookIds, setSavedBookIds] = useState(getSavedBookIds());
 
   // set up useEffect hook to save `savedBookIds` list to localStorage on component unmount
@@ -30,10 +30,8 @@ const SearchBooks = () => {
 
     try {
       const response = await searchGoogleBooks(searchInput);
-      console.log(response);
 
       if (!response.ok) {
-        console.log(response)
         setSearchedBooks([]);
       }
       else {
@@ -42,7 +40,6 @@ const SearchBooks = () => {
 
       // var body = [await response.json()];
       var json = await response.json();
-      console.log(json);
       const body = json.results;
 
       // const { items } = await response.json();
@@ -62,16 +59,30 @@ const SearchBooks = () => {
       const gameData = body.map((game) => ({
         gameId: game.id,
         name: game.name, 
-        description: game.description,
-        metacritic: game.metacritic,
         released: game.released,
         image: game.background_image,
-        website: game.website,
-        esrb_rating: (game.esrb_rating) ? game.esrb_rating.name : null,
         platforms: game.platforms,
         genres: game.genres,
-        developers: game.developers
+        metacritic: game.metacritic,
+        esrb_rating: game.esrb_rating ? game.esrb_rating.name : null,
       }));
+
+      // console.log(gameData[0].genres);
+      // console.log(gameData[0].platforms);
+      gameData.forEach(function (game) {
+        var allGenres = "";
+        game.genres.forEach(function (genre) {
+          allGenres += genre.name + ", ";
+        });
+        game.genres = allGenres.substring(0, allGenres.length - 2);
+
+        var allPlatforms = "";
+        game.platforms.forEach(function (platform) {
+          allPlatforms += platform.platform.name + ", ";
+        });
+        game.platforms = allPlatforms.substring(0, allPlatforms.length - 2);
+      });
+
 
       // game id
       // name vs. name_original
@@ -86,7 +97,7 @@ const SearchBooks = () => {
       // developer
 
       // const bookData = items.map((book) => ({
-      //   bookId: book.id,
+      //   gameId: book.id,
       //   authors: book.volumeInfo.authors || ['No author to display'],
       //   title: book.volumeInfo.title,
       //   description: book.volumeInfo.description,
@@ -104,9 +115,9 @@ const SearchBooks = () => {
   };
 
   // create function to handle saving a book to our database
-  const handleSaveBook = async (bookId) => {
+  const handleSaveBook = async (gameId) => {
     // find the book in `searchedBooks` state by the matching id
-    const bookToSave = searchedBooks.find((book) => book.bookId === bookId);
+    const bookToSave = searchedBooks.find((game) => game.gameId === gameId);
 
     // get token
     const token = Auth.loggedIn() ? Auth.getToken() : null;
@@ -123,17 +134,15 @@ const SearchBooks = () => {
       }
 
       // if book successfully saves to user's account, save book id to state
-      setSavedBookIds([...savedBookIds, bookToSave.bookId]);
+      setSavedBookIds([...savedBookIds, bookToSave.gameId]);
     } catch (err) {
       console.error(err);
     }
   };
 
   const handleDescription = async (gameId) => {
-    console.log(gameId);
     const response = await fetch(`https://api.rawg.io/api/games/${gameId}?key=00c0301752f8469e917d550c6ce3fb22`)
     const body = await response.json();
-    // window.alert(body.description);
 
     var modal = document.getElementById("myModal");
     var content = document.getElementById("myDescription");
@@ -144,11 +153,6 @@ const SearchBooks = () => {
 
     // Get the <span> element that closes the modal
     var span = document.getElementsByClassName("close")[0];
-
-    // When the user clicks the button, open the modal 
-    // btn.onclick = function() {
-    //   ;
-    // }
 
     modal.style.display = "block"
 
@@ -167,9 +171,9 @@ const SearchBooks = () => {
 
   return (
     <>
-      <Jumbotron fluid className='text-light bg-warning'>
+      <Jumbotron fluid className='text-light bg-warning' style={{ backgroundImage: `url(screenshot.png)`, backgroundSize: 'cover' }}>
         <Container>
-          <h1>Search for Games!</h1>
+          <h1>Find a game!</h1>
           <Form onSubmit={handleFormSubmit}>
             <Form.Row>
               <Col xs={12} md={8}>
@@ -193,7 +197,7 @@ const SearchBooks = () => {
       </Jumbotron>
 
       <Container>
-      <div id="myModal" class="modal">
+      <div id="myModal" class="customModal">
         <div class="modal-content">
           <span class="close">&times;</span>
           <p id="myDescription"></p>
@@ -201,9 +205,10 @@ const SearchBooks = () => {
       </div>
         <h3>
           {searchedBooks ? searchedBooks.length ? 
-            `Viewing your results:` : `No games found.`
+            `Your games:` : `No games found.`
             : ``}
         </h3>
+
         <CardColumns>
           {searchedBooks ? searchedBooks.map((game) => {
             return (
@@ -213,14 +218,14 @@ const SearchBooks = () => {
                 ) : null}
                 <Card.Body>
                   <Card.Title>{game.name}</Card.Title>
-                  <p>{game.metacritic}</p>
-                  <p>{game.released}</p>
-                  <p>{game.esrb_rating}</p>
-                  <p>{game.description}</p>
-                  <a href={game.website} target="_blank">Link</a>
+                  {game.metacritic ? <p><b>Metacritic:</b> {game.metacritic}</p> : null }
+                  {game.released ? <p><b>Released on:</b> {game.released}</p> : null}
+                  {game.esrb_rating ? <p><b>ESRB Rating:</b> {game.esrb_rating}</p> : null}
+                  {game.genres ? <p><b>Genres:</b> {game.genres}</p> : null}
+                  {game.platforms ? <p><b>Platforms:</b> {game.platforms}</p> : null}
                   <Button
                       className='btn-block btn-info'
-                      onClick={() => handleDescription(game.gameId, null)}>
+                      onClick={() => handleDescription(game.gameId)}>
                       Description
                     </Button>
                   {Auth.loggedIn() && (
