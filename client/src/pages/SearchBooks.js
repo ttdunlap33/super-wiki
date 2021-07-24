@@ -76,11 +76,13 @@ const SearchBooks = () => {
         });
         game.genres = allGenres.substring(0, allGenres.length - 2);
 
-        var allPlatforms = "";
-        game.platforms.forEach(function (platform) {
-          allPlatforms += platform.platform.name + ", ";
-        });
-        game.platforms = allPlatforms.substring(0, allPlatforms.length - 2);
+        if (game.platforms) {
+          var allPlatforms = "";
+          game.platforms.forEach(function (platform) {
+            allPlatforms += platform.platform.name + ", ";
+          });
+          game.platforms = allPlatforms.substring(0, allPlatforms.length - 2);
+        }
       });
 
 
@@ -169,9 +171,22 @@ const SearchBooks = () => {
     }
   }
 
+  const handleLink = async (gameId) => {
+    const response = await fetch(`https://api.rawg.io/api/games/${gameId}?key=00c0301752f8469e917d550c6ce3fb22`)
+    const body = await response.json();
+
+    var url = body.reddit_url;
+    if (url) {
+      window.open(url, '_blank');
+    }
+    else {
+      window.alert(`No subreddit for '${body.name}'`)
+    }
+  }
+
   return (
     <>
-      <Jumbotron fluid className='text-light' style={{ backgroundImage: `url(screenshot.png)`, backgroundSize: 'cover' }}>
+      <Jumbotron fluid className='text-light bg-light' style={{ backgroundImage: `url(screenshot.png)`, backgroundSize: 'cover' }}>
         <Container>
           <h1>Find a game!</h1>
           <Form onSubmit={handleFormSubmit}>
@@ -187,7 +202,7 @@ const SearchBooks = () => {
                 />
               </Col>
               <Col xs={12} md={4}>
-                <Button type='submit' variant='info' size='lg'>
+                <Button type='submit' variant='dark' size='lg'>
                   Submit Search
                 </Button>
               </Col>
@@ -223,13 +238,18 @@ const SearchBooks = () => {
                   {game.esrb_rating ? <p><b>ESRB Rating:</b> {game.esrb_rating}</p> : null}
                   {game.genres ? <p><b>Genres:</b> {game.genres}</p> : null}
                   {game.platforms ? <p><b>Platforms:</b> {game.platforms}</p> : null}
-                  <Button
+                  <Button variant="dark"
                       className='btn-block btn-info'
                       onClick={() => handleDescription(game.gameId)}>
                       Description
                     </Button>
+                    <Button variant="dark"
+                      className='btn-block btn-info'
+                      onClick={() => handleLink(game.gameId)}>
+                      Reddit
+                    </Button>
                   {Auth.loggedIn() && (
-                    <Button 
+                    <Button variant="dark"
                       disabled={savedBookIds?.some((savedBookId) => savedBookId === game.gameId)}
                       className='btn-block btn-info'
                       onClick={() => handleSaveBook(game.gameId)}>
