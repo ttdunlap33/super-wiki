@@ -96,7 +96,7 @@ const SavedBooks = () => {
 
   return (
     <>
-      <Jumbotron fluid className='text-light bg-warning' style={{ backgroundImage: `url(screenshot.png)`, backgroundSize: 'cover' }}>
+      <Jumbotron fluid className='text-light bg-light' style={{ backgroundImage: `url(screenshot.png)`, backgroundSize: 'cover' }}>
         <Container>
           <h1>Viewing saved Video Games!</h1>
         </Container>
