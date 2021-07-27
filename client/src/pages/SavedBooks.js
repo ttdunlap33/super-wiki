@@ -114,11 +114,11 @@ const SavedBooks = () => {
                 {game.genres ? <p><b>Genres:</b> {game.genres}</p> : null}
                 {game.platforms ? <p><b>Platforms:</b> {game.platforms}</p> : null}
                 <Button
-                    className='btn-block btn-info'
+                    className='btn-block btn-dark'
                     onClick={() => handleDescription(game.gameId)}>
                     Description
                   </Button>
-                <Button className='btn-block btn-danger' onClick={() => handleDeleteBook(game.gameId)}>
+                <Button className='btn-block btn-dark' onClick={() => handleDeleteBook(game.gameId)}>
                   Remove from Favorites
                 </Button>
               </Card.Body>
