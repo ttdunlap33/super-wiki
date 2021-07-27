@@ -42,16 +42,6 @@ const resolvers = {
       try {
         // If context has a `user` property, that means the user executing this mutation has a valid JWT and is logged in
         if (context.user) {
-          // const updatedUser = await User.findByIdAndUpdate(
-          //     { _id: context.user._id },
-          //     { $push: { savedBooks: bookData } },
-          //     { new: true }
-          // );
-
-          console.log('saveGame in resolvers.')
-          console.log(gameData);
-          console.log('=======')
-
           const updatedUser = await User.findByIdAndUpdate(
             { _id: context.user._id },
             { $push: { savedGames: gameData } },
@@ -69,11 +59,6 @@ const resolvers = {
     },
     removeGame: async (parent, { gameId }, context) => {
       if (context.user) {
-        // const updatedUser = await User.findOneAndUpdate(
-        //   { _id: context.user._id },
-        //   { $pull: { savedBooks: bookId } },
-        //   { new: true }
-        // );
 
         const updatedUser = await User.findOneAndUpdate(
           { _id: context.user._id },
