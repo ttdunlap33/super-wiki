@@ -229,7 +229,7 @@ const SearchBooks = () => {
                       onClick={() => handleSaveBook(game.gameId)}>
                       {savedBookIds?.some((savedBookId) => savedBookId === game.gameId)
                         ? 'You saved this game!'
-                        : 'Save this Game!'}
+                        : 'Favorite this Game!'}
                     </Button>
                   )}
                 </Card.Body>
