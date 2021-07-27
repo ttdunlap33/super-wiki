@@ -131,12 +131,12 @@ const SavedBooks = () => {
         </div>
       </div>
         <h2>
-          {userData.savedBooks.length
-            ? `Viewing ${userData.savedBooks.length} saved ${userData.savedBooks.length === 1 ? 'video game' : 'video games'}:`
+          {userData.savedGames.length
+            ? `Viewing ${userData.savedGames.length} saved ${userData.savedGames.length === 1 ? 'video game' : 'video games'}:`
             : 'You have no saved video games!'}
         </h2>
         <CardColumns>
-          {userData.savedBooks.map((game) => {
+          {userData.savedGames.map((game) => {
             return (
               <Card key={game.gameId} border='dark'>
               {game.image ? (

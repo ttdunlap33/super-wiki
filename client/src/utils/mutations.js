@@ -24,23 +24,61 @@ export const ADD_USER = gql`
   }
 `;
 
+// export const SAVE_BOOK = gql`
+//   mutation saveBook($bookData: BookInput!) {
+//     saveBook(bookData: $bookData) {
+//       _id
+//       username
+//       email
+//       savedBooks {
+//         bookId
+//         authors
+//         image
+//         description
+//         title
+//         link
+//       }
+//     }
+//   }
+// `;
+
 export const SAVE_BOOK = gql`
-  mutation saveBook($bookData: BookInput!) {
+  mutation saveBook($bookData: SavedGame!) {
     saveBook(bookData: $bookData) {
       _id
       username
       email
-      savedBooks {
-        bookId
-        authors
+      savedGames {
+        gameId
+        name
+        released
         image
-        description
-        title
-        link
+        platforms
+        genres
+        metacritic
+        esrb_rating
       }
     }
   }
 `;
+
+// export const REMOVE_BOOK = gql`
+//   mutation removeBook($bookId: ID!) {
+//     removeBook(bookId: $bookId) {
+//       _id
+//       username
+//       email
+//       savedBooks {
+//         bookId
+//         authors
+//         image
+//         description
+//         title
+//         link
+//       }
+//     }
+//   }
+// `;
 
 export const REMOVE_BOOK = gql`
   mutation removeBook($bookId: ID!) {
@@ -48,13 +86,15 @@ export const REMOVE_BOOK = gql`
       _id
       username
       email
-      savedBooks {
-        bookId
-        authors
+      savedGames {
+        gameId
+        name
+        released
         image
-        description
-        title
-        link
+        platforms
+        genres
+        metacritic
+        esrb_rating
       }
     }
   }

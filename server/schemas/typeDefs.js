@@ -26,7 +26,7 @@ type User {
     metacritic: String
     esrb_rating: String
   }
-  input savedGame {
+  input SavedGame {
     gameId: String
     name: String
     released: String
