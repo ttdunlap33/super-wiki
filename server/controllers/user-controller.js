@@ -44,12 +44,18 @@ module.exports = {
   },
   // save a book to a user's `savedBooks` field by adding it to the set (to prevent duplicates)
   // user comes from `req.user` created in the auth middleware function
-  async saveBook({ user, body }, res) {
+  async saveGame({ user, body }, res) {
    
     try {
+      // const updatedUser = await User.findOneAndUpdate(
+      //   { _id: user._id },
+      //   { $addToSet: { savedBooks: body } },
+      //   { new: true, runValidators: true }
+      // );
+
       const updatedUser = await User.findOneAndUpdate(
         { _id: user._id },
-        { $addToSet: { savedBooks: body } },
+        { $addToSet: { savedGames: body } },
         { new: true, runValidators: true }
       );
       return res.json(updatedUser);
@@ -60,9 +66,15 @@ module.exports = {
   },
   // remove a book from `savedBooks`
   async deleteBook({ user, params }, res) {
+    // const updatedUser = await User.findOneAndUpdate(
+    //   { _id: user._id },
+    //   { $pull: { savedBooks: { bookId: params.bookId } } },
+    //   { new: true }
+    // );
+
     const updatedUser = await User.findOneAndUpdate(
       { _id: user._id },
-      { $pull: { savedBooks: { bookId: params.bookId } } },
+      { $pull: { savedGames: { bookId: params.bookId } } },
       { new: true }
     );
     if (!updatedUser) {

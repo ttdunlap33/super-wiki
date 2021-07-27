@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { Jumbotron, Container, CardColumns, Card, Button } from 'react-bootstrap';
 
-// import { getMe, deleteBook } from '../utils/API';
+import { getMe, deleteBook } from '../utils/API';
 import Auth from '../utils/auth';
 import { removeBookId } from '../utils/localStorage';
 
 import { GET_ME } from '../utils/queries';
-import { REMOVE_BOOK } from '../utils/mutations';
+import { REMOVE_GAME } from '../utils/mutations';
 import { useMutation, useQuery } from '@apollo/client';
 
 const SavedBooks = () => {
   // const [userData, setUserData] = useState({});
   
   const { loading, data } = useQuery(GET_ME);
-  const [removeBook, {error}] = useMutation(REMOVE_BOOK);
+  const [removeGame, {error}] = useMutation(REMOVE_GAME);
 
   const userData = data?.me || [];
 
@@ -31,6 +31,8 @@ const SavedBooks = () => {
 
   //       const response = await getMe(token);
 
+  //       console.log(response);
+
   //       if (!response.ok) {
   //         throw new Error('something went wrong!');
   //       }
@@ -46,7 +48,7 @@ const SavedBooks = () => {
   // }, [userDataLength]);
 
   // create function that accepts the book's mongo _id value as param and deletes the book from the database
-  const handleDeleteBook = async (bookId) => {
+  const handleDeleteBook = async (gameId) => {
     const token = Auth.loggedIn() ? Auth.getToken() : null;
 
     if (!token) {
@@ -54,7 +56,7 @@ const SavedBooks = () => {
     }
 
     try {
-      // const response = await deleteBook(bookId, token);
+      // const response = await deleteBook(gameId, token);
 
       // if (!response.ok) {
       //   throw new Error('something went wrong!');
@@ -62,8 +64,10 @@ const SavedBooks = () => {
 
       // const updatedUser = await response.json();
 
-      await removeBook({
-        variables: { bookId }
+      console.log(gameId);
+
+      await removeGame({
+        variables: { gameId }
       });
 
       if (error) {
@@ -72,7 +76,7 @@ const SavedBooks = () => {
 
       // setUserData(updatedUser);
       // upon success, remove book's id from localStorage
-      removeBookId(bookId);
+      removeBookId(gameId);
     } catch (err) {
       console.error(err);
     }
@@ -131,12 +135,12 @@ const SavedBooks = () => {
         </div>
       </div>
         <h2>
-          {userData.savedGames.length
+          {userData.savedGames?.length
             ? `Viewing ${userData.savedGames.length} saved ${userData.savedGames.length === 1 ? 'video game' : 'video games'}:`
             : 'You have no saved video games!'}
         </h2>
         <CardColumns>
-          {userData.savedGames.map((game) => {
+          {userData.savedGames?.map((game) => {
             return (
               <Card key={game.gameId} border='dark'>
               {game.image ? (

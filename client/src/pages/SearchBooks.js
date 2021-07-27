@@ -6,7 +6,7 @@ import Auth from '../utils/auth';
 import { searchGoogleBooks } from '../utils/API';
 import { saveBookIds, getSavedBookIds } from '../utils/localStorage';
 import { useMutation } from '@apollo/client';
-import { SAVE_BOOK } from '../utils/mutations';
+import { SAVE_GAME } from '../utils/mutations';
 
 const SearchBooks = () => {
   // create state for holding returned google api data
@@ -17,7 +17,7 @@ const SearchBooks = () => {
   // create state to hold saved gameId values
   const [savedBookIds, setSavedBookIds] = useState(getSavedBookIds());
 
-  const [saveBook, { error }] = useMutation(SAVE_BOOK);
+  const [saveGame, { error }] = useMutation(SAVE_GAME);
 
   // set up useEffect hook to save `savedBookIds` list to localStorage on component unmount
   // learn more here: https://reactjs.org/docs/hooks-effect.html#effects-with-cleanup
@@ -75,15 +75,6 @@ const SearchBooks = () => {
         }
       });
 
-      // const bookData = items.map((book) => ({
-      //   gameId: book.id,
-      //   authors: book.volumeInfo.authors || ['No author to display'],
-      //   title: book.volumeInfo.title,
-      //   description: book.volumeInfo.description,
-      //   image: book.volumeInfo.imageLinks?.thumbnail || '',
-      //   link: book.volumeInfo.infoLink,
-      // }));
-
       // setSearchedBooks(bookData);
       setSearchedBooks(gameData);
       setSearchInput('');
@@ -115,11 +106,10 @@ const SearchBooks = () => {
       // // if book successfully saves to user's account, save book id to state
       // setSavedBookIds([...savedBookIds, bookToSave.gameId]);
       
-      const { data } = await saveBook({
-        variables: { bookData: { ...bookToSave } },
+      const { data } = await saveGame({
+        variables: { gameData: { ...bookToSave } },
       });
-      console.log(savedBookIds);
-      setSavedBookIds([...savedBookIds, bookToSave.bookId]);
+      setSavedBookIds([...savedBookIds, bookToSave.gameId]);
 
     } catch (err) {
       console.error(err);

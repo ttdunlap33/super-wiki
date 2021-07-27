@@ -42,9 +42,9 @@ export const ADD_USER = gql`
 //   }
 // `;
 
-export const SAVE_BOOK = gql`
-  mutation saveBook($bookData: SavedGame!) {
-    saveBook(bookData: $bookData) {
+export const SAVE_GAME = gql`
+  mutation saveGame($gameData: SavedGame!) {
+    saveGame(gameData: $gameData) {
       _id
       username
       email
@@ -80,9 +80,9 @@ export const SAVE_BOOK = gql`
 //   }
 // `;
 
-export const REMOVE_BOOK = gql`
-  mutation removeBook($bookId: ID!) {
-    removeBook(bookId: $bookId) {
+export const REMOVE_GAME = gql`
+  mutation removeGame($gameId: ID!) {
+    removeGame(gameId: $gameId) {
       _id
       username
       email

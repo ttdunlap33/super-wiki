@@ -5,8 +5,10 @@ const { signToken } = require('../utils/auth');
 const resolvers = {
   Query: {
     me: async (parent, args, context) => {
-      if (context,user) {
-        const userData = User.findOne({ _id: context.user.id }).select('-_v -password');
+      if (context.user) {
+        // const userData = User.findOne({ _id: context.user.id }).select('-__v -password');
+        const userData = User.findOne({ _id: context.user._id }).select('-__v -password');
+        // console.log(userData);
         return userData;
       }
       throw new AuthenticationError('You need to be logged in!');
@@ -16,7 +18,6 @@ const resolvers = {
   Mutation: {
     addUser: async (parent, { username, email, password }) => {
       const user = await User.create({ username, email, password});
-      console.log('Mutation user');
       const token = signToken(user);
       return { token,user };
     },
@@ -37,24 +38,44 @@ const resolvers = {
       return { token, user };
     },
 
-    saveBook: async (parent, { bookData }, context) => {
-      // If context has a `user` property, that means the user executing this mutation has a valid JWT and is logged in
-      if (context.user) {
-        const updatedUser = await User.findByIdAndUpdate(
+    saveGame: async (parent, { gameData }, context) => {
+      try {
+        // If context has a `user` property, that means the user executing this mutation has a valid JWT and is logged in
+        if (context.user) {
+          // const updatedUser = await User.findByIdAndUpdate(
+          //     { _id: context.user._id },
+          //     { $push: { savedBooks: bookData } },
+          //     { new: true }
+          // );
+
+          console.log('saveGame in resolvers.')
+
+          const updatedUser = await User.findByIdAndUpdate(
             { _id: context.user._id },
-            { $push: { savedBooks: bookData } },
+            { $push: { savedGames: gameData } },
             { new: true }
         );
 
-        return updatedUser;
+          return updatedUser;
+        }
+        throw new AuthenticationError('You need to be logged in!');
+      } catch (err) {
+        console.log(err);
       }
-      throw new AuthenticationError('You need to be logged in!');
     },
-    removeBook: async (parent, { bookId }, context) => {
+    removeGame: async (parent, { gameId }, context) => {
       if (context.user) {
+        // const updatedUser = await User.findOneAndUpdate(
+        //   { _id: context.user._id },
+        //   { $pull: { savedBooks: bookId } },
+        //   { new: true }
+        // );
+
+        console.log(gameId);
+
         const updatedUser = await User.findOneAndUpdate(
           { _id: context.user._id },
-          { $pull: { savedBooks: bookId } },
+          { $pull: { savedGames: gameId } },
           { new: true }
         );
 
