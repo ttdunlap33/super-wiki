@@ -49,12 +49,16 @@ const resolvers = {
           // );
 
           console.log('saveGame in resolvers.')
+          console.log(gameData);
+          console.log('=======')
 
           const updatedUser = await User.findByIdAndUpdate(
             { _id: context.user._id },
             { $push: { savedGames: gameData } },
             { new: true }
         );
+
+        console.log(updatedUser);
 
           return updatedUser;
         }
@@ -71,11 +75,9 @@ const resolvers = {
         //   { new: true }
         // );
 
-        console.log(gameId);
-
         const updatedUser = await User.findOneAndUpdate(
           { _id: context.user._id },
-          { $pull: { savedGames: gameId } },
+          { $pull: { savedGames: {gameId: gameId} } },
           { new: true }
         );
 
