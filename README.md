@@ -5,6 +5,7 @@ Save Games
 Delete Games
 - Requires Server and DB changes
 Fetch Games (when login)
+- Should be done automatically with book conversion
 Change top bar (buttons instead)
 
 Yoshi Egg in favicon

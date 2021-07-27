@@ -55,44 +55,10 @@ export const deleteBook = (bookId, token) => {
 // make a search to google books api
 // https://www.googleapis.com/books/v1/volumes?q=harry+potter
 export const searchGoogleBooks = (query) => {
-  // return fetch(`https://www.googleapis.com/books/v1/volumes?q=${query}`);
-    // var apiUrl = `https://superheroapi.com/api/4143178869133177/search/${query}`;
-  
-    // console.log(apiUrl);    
-    // $.ajax({
-    //   url: apiUrl,
-    //   type: 'GET',
-    //   dataType: 'jsonp'
-    // }).then (function (response) {
-    //   console.log(response);
-    // });
-//////////////
-    // data: {
-    //   k: apiKeyTaste,
-    //   q: movieName,
-    //   type: "movie",
-    //   info: 1,
-    //   limit: 6,
-    // },
-
-    // return $.ajax({
-    //   url: `https://superheroapi.com/api/4143178869133177/search/${query}`,
-    //   type: "GET",
-    //   crossDomain: true,
-    //   dataType: "json",
-    // })
-    // query = query.replace(/\s+/g, '-').toLowerCase();
-    // console.log(query); // "sonic-free-games"
+    // return fetch(`https://www.googleapis.com/books/v1/volumes?q=${query}`);
 
     const API_KEY = process.env.REACT_APP_API_KEY
     console.log(API_KEY)
 
     return fetch(`https://api.rawg.io/api/games?key=${API_KEY}&search=${query}&search_precise=false`);
-
-    // server side
-    // return fetch(`/api/users/games/${query}`, {
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    // });
 };

@@ -36,26 +36,10 @@ const SearchBooks = () => {
         setSearchedBooks([]);
       }
       else {
-        // var body = await response.json();
-      // console.log(body);
-
-      // var body = [await response.json()];
       var json = await response.json();
       const body = json.results;
 
       // const { items } = await response.json();
-
-      // console.log(items)
-
-      // console.log(items);
-
-      // var gameData = {
-      //   gameId: body.id,
-      //   name: body.name, 
-      //   description: body.description,
-      //   image: body.background_image,
-      //   second_image: body.background_image_additional,
-      // };
 
       const gameData = body.map((game) => ({
         gameId: game.id,
@@ -68,8 +52,6 @@ const SearchBooks = () => {
         esrb_rating: game.esrb_rating ? game.esrb_rating.name : null,
       }));
 
-      // console.log(gameData[0].genres);
-      // console.log(gameData[0].platforms);
       gameData.forEach(function (game) {
         if (game.genres) {
           var allGenres = "";
@@ -87,19 +69,6 @@ const SearchBooks = () => {
           game.platforms = allPlatforms.substring(0, allPlatforms.length - 2);
         }
       });
-
-
-      // game id
-      // name vs. name_original
-      // description
-      // metacritic (metacritic_url) vs. rating
-      // released
-      // background_image and background_image_additional
-      // website
-      // esrb_rating
-      // platforms (concat)
-      // genre (concat)
-      // developer
 
       // const bookData = items.map((book) => ({
       //   gameId: book.id,
