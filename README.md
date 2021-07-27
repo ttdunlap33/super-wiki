@@ -10,8 +10,6 @@ Change top bar (buttons instead)
 
 Yoshi Egg in favicon
 
-GraphQL???????
-
 Trailers:
 https://api.rawg.io/api/games/grand-theft-auto-v/movies?key=${API_KEY}
 https://api.rawg.io/api/games/<slug/ID>/movies?key=

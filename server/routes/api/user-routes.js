@@ -5,7 +5,6 @@ const {
   saveBook,
   deleteBook,
   login,
-  getGame,
 } = require('../../controllers/user-controller');
 
 // import middleware
@@ -19,7 +18,5 @@ router.route('/login').post(login);
 router.route('/me').get(authMiddleware, getSingleUser);
 
 router.route('/books/:bookId').delete(authMiddleware, deleteBook);
-
-router.route('/games/:query').get(getGame)
 
 module.exports = router;

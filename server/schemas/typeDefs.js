@@ -5,8 +5,8 @@ type User {
     _id: ID!
     username: String!
     email: String
-    bookCount: Int
-    savedBooks: [Book]
+    gameCount: Int
+    savedGames: [Game]
   }
   type Book {
     bookId: ID!
@@ -15,7 +15,26 @@ type User {
     title: String!
     image: String
     link: String
-  
+  }
+  type Game {
+    gameId: ID!
+    name: String!
+    released: String
+    image: String
+    platforms: String
+    genres: String
+    metacritic: String
+    esrb_rating: String
+  }
+  input savedGame {
+    gameId: String
+    name: String
+    released: String
+    image: String
+    platforms: String
+    genres: String
+    metacritic: String
+    esrb_rating: String
   }
   input savedBook {
     bookId: String
@@ -32,7 +51,7 @@ type User {
   type Mutation {
     login(email: String!, password: String!): Auth
     addUser(username: String!, email: String!, password: String!): Auth
-    saveBook(bookData: savedBook!): User
+    saveBook(bookData: savedGame!): User
     removeBook(bookId: ID!): User
   }
   type Auth {
