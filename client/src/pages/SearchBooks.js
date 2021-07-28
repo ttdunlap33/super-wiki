@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Jumbotron, Container, Col, Form, Button, Card, CardColumns, Row, CardGroup } from 'react-bootstrap';
+import { Jumbotron, Container, Col, Form, Button, Card, CardColumns, Row, CardGroup, Tab, Modal, Nav } from 'react-bootstrap';
 
 import Auth from '../utils/auth';
 // import { saveBook, searchGoogleBooks } from '../utils/API';
@@ -7,6 +7,12 @@ import { searchGoogleBooks } from '../utils/API';
 import { saveBookIds, getSavedBookIds } from '../utils/localStorage';
 import { useMutation } from '@apollo/client';
 import { SAVE_GAME } from '../utils/mutations';
+
+import SignUpForm from '../components/SignupForm';
+import LoginForm from '../components/LoginForm';
+
+import { Link } from 'react-router-dom';
+
 
 const SearchBooks = () => {
   // create state for holding returned google api data
@@ -18,6 +24,9 @@ const SearchBooks = () => {
   const [savedBookIds, setSavedBookIds] = useState(getSavedBookIds());
 
   const [saveGame, { error }] = useMutation(SAVE_GAME);
+
+  // set modal display state
+  const [showModal, setShowModal] = useState(false);
 
   // set up useEffect hook to save `savedBookIds` list to localStorage on component unmount
   // learn more here: https://reactjs.org/docs/hooks-effect.html#effects-with-cleanup
@@ -158,6 +167,10 @@ const SearchBooks = () => {
     }
   }
 
+  const favoriteGames = async () => {
+    window.location.href='/saved'
+  }
+
   return (
     <>
       <Jumbotron fluid className='text-light bg-light' style={{ backgroundImage: `url(screenshot.png)`, backgroundSize: 'cover' }}>
@@ -182,8 +195,48 @@ const SearchBooks = () => {
               </Col>
             </Form.Row>
           </Form>
+          {Auth.loggedIn() ? (
+            <>
+              <Button className="mt-3 mr-2" variant="dark" onClick={favoriteGames}>Favorite Games</Button>
+              <Button className="mt-3 ml-2 mr-2" variant="light" onClick={Auth.logout}>Logout</Button>
+            </>
+          ) : (
+            <Button className="mt-3 mr-2" variant="dark" onClick={() => setShowModal(true)}>Login/Sign Up</Button>
+          )}
         </Container>
       </Jumbotron>
+
+      <Modal
+        size='lg'
+        show={showModal}
+        onHide={() => setShowModal(false)}
+        aria-labelledby='signup-modal'>
+        {/* tab container to do either signup or login component*/}
+        <Tab.Container defaultActiveKey='login'>
+          <Modal.Header closeButton>
+            <Modal.Title id='signup-modal'>
+              <Nav variant="tabs">
+                <Nav.Item>
+                  <Nav.Link eventKey='login' variant="dark">Login</Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                  <Nav.Link eventKey='signup'>Sign Up</Nav.Link>
+                </Nav.Item>
+              </Nav>
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Tab.Content>
+              <Tab.Pane eventKey='login'>
+                <LoginForm handleModalClose={() => setShowModal(false)} />
+              </Tab.Pane>
+              <Tab.Pane eventKey='signup'>
+                <SignUpForm handleModalClose={() => setShowModal(false)} />
+              </Tab.Pane>
+            </Tab.Content>
+          </Modal.Body>
+        </Tab.Container>
+      </Modal> 
 
       <Container>
       <div id="myModal" class="customModal">
@@ -198,10 +251,10 @@ const SearchBooks = () => {
             : ``}
         </h3>
 
-        <CardColumns>
+        <Row xs={5}>
           {searchedBooks ? searchedBooks.map((game) => {
             return (
-              <Card key={game.gameId} border='dark'>
+              <Card key={game.gameId} border='dark' className="m-3">
                 {game.image ? (
                   <Card.Img src={game.image} alt={`The cover for ${game.name}`} variant='top' />
                 ) : null}
@@ -236,7 +289,7 @@ const SearchBooks = () => {
               </Card>
             );
           }) : null}
-        </CardColumns>
+        </Row>
       </Container>
     </>
   );

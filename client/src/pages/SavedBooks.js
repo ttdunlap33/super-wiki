@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Jumbotron, Container, CardColumns, Card, Button } from 'react-bootstrap';
+import { Jumbotron, Container, CardColumns, Card, Button, Modal, Tab, Nav } from 'react-bootstrap';
 
 import { getMe, deleteBook } from '../utils/API';
 import Auth from '../utils/auth';
@@ -9,7 +9,13 @@ import { GET_ME } from '../utils/queries';
 import { REMOVE_GAME } from '../utils/mutations';
 import { useMutation, useQuery } from '@apollo/client';
 
+import SignUpForm from '../components/SignupForm';
+import LoginForm from '../components/LoginForm';
+
 const SavedBooks = () => {  
+  // set modal display state
+  const [showModal, setShowModal] = useState(false);
+
   const { loading, data } = useQuery(GET_ME);
   const [removeGame, {error}] = useMutation(REMOVE_GAME);
 
@@ -71,6 +77,10 @@ const SavedBooks = () => {
     }
   }
 
+  const favoriteGames = async () => {
+    window.location.href='/'
+  }
+
   // if data isn't here yet, say so
   // if (!userDataLength) {
   //   return <h2>LOADING...</h2>;
@@ -85,8 +95,47 @@ const SavedBooks = () => {
       <Jumbotron fluid className='text-light bg-light' style={{ backgroundImage: `url(screenshot.png)`, backgroundSize: 'cover' }}>
         <Container>
           <h1>Viewing saved Video Games!</h1>
+          {Auth.loggedIn() ? (
+            <>
+              <Button className="mt-3 mr-2" variant="dark" onClick={favoriteGames}>Search for a Game!</Button>
+              <Button className="mt-3 ml-2 mr-2" variant="light" onClick={Auth.logout}>Logout</Button>
+            </>
+          ) : (
+            <Button className="mt-3 mr-2" variant="dark" onClick={() => setShowModal(true)}>Login/Sign Up</Button>
+          )}
         </Container>
       </Jumbotron>
+      <Modal
+        size='lg'
+        show={showModal}
+        onHide={() => setShowModal(false)}
+        aria-labelledby='signup-modal'>
+        {/* tab container to do either signup or login component*/}
+        <Tab.Container defaultActiveKey='login'>
+          <Modal.Header closeButton>
+            <Modal.Title id='signup-modal'>
+              <Nav variant='pills'>
+                <Nav.Item>
+                  <Nav.Link eventKey='login'>Login</Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                  <Nav.Link eventKey='signup'>Sign Up</Nav.Link>
+                </Nav.Item>
+              </Nav>
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Tab.Content>
+              <Tab.Pane eventKey='login'>
+                <LoginForm handleModalClose={() => setShowModal(false)} />
+              </Tab.Pane>
+              <Tab.Pane eventKey='signup'>
+                <SignUpForm handleModalClose={() => setShowModal(false)} />
+              </Tab.Pane>
+            </Tab.Content>
+          </Modal.Body>
+        </Tab.Container>
+      </Modal> 
       <Container>
       <div id="myModal" class="customModal">
         <div class="modal-content">
