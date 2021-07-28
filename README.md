@@ -1,7 +1,4 @@
 # super-wiki
-
-Change top bar (buttons instead)
-
 Yoshi Egg in favicon
 
 Trailers:
