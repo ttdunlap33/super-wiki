@@ -44,7 +44,6 @@ const SearchGames = () => {
 
     try {
       const response = await searchVideoGames(searchInput);
-      console.log(response);
 
       if (!response.ok) {
         setSearchedGames([]);
@@ -116,7 +115,8 @@ const SearchGames = () => {
   };
 
   const handleDescription = async (gameId) => {
-    const response = await fetch(`https://api.rawg.io/api/games/${gameId}?key=00c0301752f8469e917d550c6ce3fb22`)
+    const API_KEY = process.env.REACT_APP_API_KEY
+    const response = await fetch(`https://api.rawg.io/api/games/${gameId}?key=${API_KEY}`);
     const body = await response.json();
 
     var modal = document.getElementById("myModal");
@@ -145,8 +145,8 @@ const SearchGames = () => {
   }
 
   const handleTrailer = async (gameId, gameName) => {
-    
-    const response = await fetch(`https://api.rawg.io/api/games/${gameId}/movies?key=00c0301752f8469e917d550c6ce3fb22`)
+    const API_KEY = process.env.REACT_APP_API_KEY
+    const response = await fetch(`https://api.rawg.io/api/games/${gameId}/movies?key=${API_KEY}`)
     const body = await response.json();
 
     if (body.count != 0) {
@@ -161,7 +161,8 @@ const SearchGames = () => {
   }
 
   const handleLink = async (gameId) => {
-    const response = await fetch(`https://api.rawg.io/api/games/${gameId}?key=00c0301752f8469e917d550c6ce3fb22`)
+    const API_KEY = process.env.REACT_APP_API_KEY
+    const response = await fetch(`https://api.rawg.io/api/games/${gameId}?key=${API_KEY}`)
     const body = await response.json();
 
     var url = body.reddit_url;
