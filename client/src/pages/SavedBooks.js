@@ -21,6 +21,8 @@ const SavedBooks = () => {
 
   const userData = data?.me || [];
 
+  const [showTrailerModal, setShowTrailerModal] = useState(false);
+
   // create function that accepts the book's mongo _id value as param and deletes the book from the database
   const handleDeleteBook = async (gameId) => {
     const token = Auth.loggedIn() ? Auth.getToken() : null;
@@ -74,6 +76,35 @@ const SavedBooks = () => {
       if (event.target == modal) {
         modal.style.display = "none";
       }
+    }
+  }
+
+  const handleTrailer = async (gameId, gameName) => {
+    
+    const response = await fetch(`https://api.rawg.io/api/games/${gameId}/movies?key=00c0301752f8469e917d550c6ce3fb22`)
+    const body = await response.json();
+
+    if (body.count != 0) {
+      setShowTrailerModal(true)
+
+      var trailerContent = document.getElementById("trailer");
+      trailerContent.src = body.results[0].data.max;
+    }
+    else {
+      window.alert(`No trailer found for '${gameName}'`);
+    }
+  }
+
+  const handleLink = async (gameId) => {
+    const response = await fetch(`https://api.rawg.io/api/games/${gameId}?key=00c0301752f8469e917d550c6ce3fb22`)
+    const body = await response.json();
+
+    var url = body.reddit_url;
+    if (url) {
+      window.open(url, '_blank');
+    }
+    else {
+      window.alert(`No subreddit for '${body.name}'`)
     }
   }
 
@@ -135,7 +166,20 @@ const SavedBooks = () => {
             </Tab.Content>
           </Modal.Body>
         </Tab.Container>
-      </Modal> 
+      </Modal>
+
+      <Modal
+        id='trailerModal'
+        size='lg'
+        show={showTrailerModal}
+        onHide={() => setShowTrailerModal(false)}
+        aria-labelledby='trailer-modal'>
+        {/* tab container to do either signup or login component*/}
+        <Modal.Header closeButton></Modal.Header>
+        <iframe id='trailer' height="300"></iframe>
+        <p id='trailerError'></p>
+      </Modal>
+
       <Container>
       <div id="myModal" class="customModal">
         <div class="modal-content">
@@ -151,7 +195,7 @@ const SavedBooks = () => {
         <Row xs={5}>
           {userData.savedGames?.map((game) => {
             return (
-              <Card key={game.gameId} border='dark' className="m-3">
+              <Card key={game.gameId} border='dark' className="m-4">
               {game.image ? (
                 <Card.Img src={game.image} alt={`The cover for ${game.name}`} variant='top' />
               ) : null}
@@ -167,7 +211,17 @@ const SavedBooks = () => {
                     onClick={() => handleDescription(game.gameId)}>
                     Description
                   </Button>
-                <Button className='btn-block btn-dark' onClick={() => handleDeleteBook(game.gameId)}>
+                  <Button variant="dark"
+                      className='btn-block btn-info'
+                      onClick={() => handleTrailer(game.gameId, game.name)}>
+                      Trailer
+                    </Button>
+                    <Button variant="dark"
+                      className='btn-block btn-info'
+                      onClick={() => handleLink(game.gameId)}>
+                      Reddit
+                    </Button>
+                <Button className='btn-block' variant='outline-danger' onClick={() => handleDeleteBook(game.gameId)}>
                   Remove from Favorites
                 </Button>
               </Card.Body>

@@ -27,6 +27,7 @@ const SearchBooks = () => {
 
   // set modal display state
   const [showModal, setShowModal] = useState(false);
+  const [showTrailerModal, setShowTrailerModal] = useState(false);
 
   // set up useEffect hook to save `savedBookIds` list to localStorage on component unmount
   // learn more here: https://reactjs.org/docs/hooks-effect.html#effects-with-cleanup
@@ -154,6 +155,22 @@ const SearchBooks = () => {
     }
   }
 
+  const handleTrailer = async (gameId, gameName) => {
+    
+    const response = await fetch(`https://api.rawg.io/api/games/${gameId}/movies?key=00c0301752f8469e917d550c6ce3fb22`)
+    const body = await response.json();
+
+    if (body.count != 0) {
+      setShowTrailerModal(true)
+
+      var trailerContent = document.getElementById("trailer");
+      trailerContent.src = body.results[0].data.max;
+    }
+    else {
+      window.alert(`No trailer found for '${gameName}'`);
+    }
+  }
+
   const handleLink = async (gameId) => {
     const response = await fetch(`https://api.rawg.io/api/games/${gameId}?key=00c0301752f8469e917d550c6ce3fb22`)
     const body = await response.json();
@@ -236,7 +253,19 @@ const SearchBooks = () => {
             </Tab.Content>
           </Modal.Body>
         </Tab.Container>
-      </Modal> 
+      </Modal>
+
+      <Modal
+        id='trailerModal'
+        size='lg'
+        show={showTrailerModal}
+        onHide={() => setShowTrailerModal(false)}
+        aria-labelledby='trailer-modal'>
+        {/* tab container to do either signup or login component*/}
+        <Modal.Header closeButton></Modal.Header>
+        <iframe id='trailer' height="300"></iframe>
+        <p id='trailerError'></p>
+      </Modal>
 
       <Container>
       <div id="myModal" class="customModal">
@@ -254,7 +283,7 @@ const SearchBooks = () => {
         <Row xs={5}>
           {searchedBooks ? searchedBooks.map((game) => {
             return (
-              <Card key={game.gameId} border='dark' className="m-3">
+              <Card key={game.gameId} border='dark' className="m-4">
                 {game.image ? (
                   <Card.Img src={game.image} alt={`The cover for ${game.name}`} variant='top' />
                 ) : null}
@@ -272,6 +301,11 @@ const SearchBooks = () => {
                     </Button>
                     <Button variant="dark"
                       className='btn-block btn-info'
+                      onClick={() => handleTrailer(game.gameId, game.name)}>
+                      Trailer
+                    </Button>
+                    <Button variant="dark"
+                      className='btn-block btn-info'
                       onClick={() => handleLink(game.gameId)}>
                       Reddit
                     </Button>
@@ -281,7 +315,7 @@ const SearchBooks = () => {
                       className='btn-block btn-info'
                       onClick={() => handleSaveBook(game.gameId)}>
                       {savedBookIds?.some((savedBookId) => savedBookId === game.gameId)
-                        ? 'You saved this game!'
+                        ? 'You favorited this game!'
                         : 'Favorite this Game!'}
                     </Button>
                   )}
