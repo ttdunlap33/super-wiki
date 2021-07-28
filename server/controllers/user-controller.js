@@ -60,7 +60,6 @@ module.exports = {
   },
   // remove a game from `savedGames`
   async deleteGame({ user, params }, res) {
-    // TODO: verify this is good - book
     const updatedUser = await User.findOneAndUpdate(
       { _id: user._id },
       { $pull: { savedGames: { gameId: params.gameId } } },
