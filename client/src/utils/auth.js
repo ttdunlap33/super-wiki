@@ -36,7 +36,7 @@ class AuthService {
     // Saves user token to localStorage
     localStorage.setItem('id_token', idToken);
     window.location.assign('/');
-    localStorage.removeItem('saved_books');
+    localStorage.removeItem('saved_games');
   }
 
   logout() {

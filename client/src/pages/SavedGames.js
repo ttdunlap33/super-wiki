@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Jumbotron, Container, CardColumns, Card, Button, Modal, Tab, Nav, Row } from 'react-bootstrap';
 
-import { getMe, deleteBook } from '../utils/API';
 import Auth from '../utils/auth';
-import { removeBookId } from '../utils/localStorage';
+import { removeGameId } from '../utils/localStorage';
 
 import { GET_ME } from '../utils/queries';
 import { REMOVE_GAME } from '../utils/mutations';
@@ -12,7 +11,7 @@ import { useMutation, useQuery } from '@apollo/client';
 import SignUpForm from '../components/SignupForm';
 import LoginForm from '../components/LoginForm';
 
-const SavedBooks = () => {  
+const SavedGames = () => {  
   // set modal display state
   const [showModal, setShowModal] = useState(false);
 
@@ -23,8 +22,7 @@ const SavedBooks = () => {
 
   const [showTrailerModal, setShowTrailerModal] = useState(false);
 
-  // create function that accepts the book's mongo _id value as param and deletes the book from the database
-  const handleDeleteBook = async (gameId) => {
+  const handleDeleteGame = async (gameId) => {
     const token = Auth.loggedIn() ? Auth.getToken() : null;
 
     if (!token) {
@@ -40,9 +38,8 @@ const SavedBooks = () => {
         throw new Error('something went wrong!');
       }
 
-      // setUserData(updatedUser);
-      // upon success, remove book's id from localStorage
-      removeBookId(gameId);
+      // upon success, remove game's id from localStorage
+      removeGameId(gameId);
 
       console.log(data);
     } catch (err) {
@@ -111,11 +108,6 @@ const SavedBooks = () => {
   const favoriteGames = async () => {
     window.location.href='/'
   }
-
-  // if data isn't here yet, say so
-  // if (!userDataLength) {
-  //   return <h2>LOADING...</h2>;
-  // }
 
   if (loading) {
     return <h2>LOADING...</h2>
@@ -221,7 +213,7 @@ const SavedBooks = () => {
                       onClick={() => handleLink(game.gameId)}>
                       Reddit
                     </Button>
-                <Button className='btn-block' variant='outline-danger' onClick={() => handleDeleteBook(game.gameId)}>
+                <Button className='btn-block' variant='outline-danger' onClick={() => handleDeleteGame(game.gameId)}>
                   Remove from Favorites
                 </Button>
               </Card.Body>
@@ -234,4 +226,4 @@ const SavedBooks = () => {
   );
 };
 
-export default SavedBooks;
+export default SavedGames;
