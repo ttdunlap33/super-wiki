@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Jumbotron, Container, CardColumns, Card, Button, Modal, Tab, Nav } from 'react-bootstrap';
+import { Jumbotron, Container, CardColumns, Card, Button, Modal, Tab, Nav, Row } from 'react-bootstrap';
 
 import { getMe, deleteBook } from '../utils/API';
 import Auth from '../utils/auth';
@@ -148,10 +148,10 @@ const SavedBooks = () => {
             ? `Viewing ${userData.savedGames.length} saved ${userData.savedGames.length === 1 ? 'video game' : 'video games'}:`
             : 'You have no saved video games!'}
         </h2>
-        <CardColumns>
+        <Row xs={5}>
           {userData.savedGames?.map((game) => {
             return (
-              <Card key={game.gameId} border='dark'>
+              <Card key={game.gameId} border='dark' className="m-3">
               {game.image ? (
                 <Card.Img src={game.image} alt={`The cover for ${game.name}`} variant='top' />
               ) : null}
@@ -174,7 +174,7 @@ const SavedBooks = () => {
             </Card>
             );
           })}
-        </CardColumns>
+        </Row>
       </Container>
     </>
   );

@@ -14,3 +14,5 @@ Cleanup the failed server-side fetch code
 Convert all books to games
 
 CSS on Saved Games page (match Search Games)
+
+Clicking remove game button removes id from localStorage
