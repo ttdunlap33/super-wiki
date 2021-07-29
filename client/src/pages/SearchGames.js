@@ -30,9 +30,9 @@ const SearchGames = () => {
 
   // set up useEffect hook to save `savedGameIds` list to localStorage on component unmount
   // learn more here: https://reactjs.org/docs/hooks-effect.html#effects-with-cleanup
-  useEffect(() => {
-    return () => saveGameIds(savedGameIds);
-  });
+  // useEffect(() => {
+  //   return () => saveGameIds(savedGameIds);
+  // });
 
   // create method to search for games and set state on form submit
   const handleFormSubmit = async (event) => {
@@ -107,7 +107,9 @@ const SearchGames = () => {
       const { data } = await saveGame({
         variables: { gameData: { ...gameToSave } },
       });
-      setSavedGameIds([...savedGameIds, gameToSave.gameId]);
+      var copy = savedGameIds.concat(gameToSave.gameId);
+      saveGameIds(copy);
+      setSavedGameIds(copy);
 
     } catch (err) {
       console.error(err);
@@ -270,7 +272,7 @@ const SearchGames = () => {
             : ``}
         </h3>
 
-        <Row xs={5}>
+        <Row xs={1} sm={1} md={5}>
           {searchedGames ? searchedGames.map((game) => {
             return (
               <Card key={game.gameId} border='dark' className="m-4">
