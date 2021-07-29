@@ -184,7 +184,7 @@ const SavedGames = () => {
             ? `Viewing ${userData.savedGames.length} saved ${userData.savedGames.length === 1 ? 'video game' : 'video games'}:`
             : 'You have no saved video games!'}
         </h2>
-        <Row xs={5}>
+        <Row xs={1} sm={1} md={5}>
           {userData.savedGames?.map((game) => {
             return (
               <Card key={game.gameId} border='dark' className="m-4">
