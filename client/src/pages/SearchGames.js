@@ -284,6 +284,8 @@ const SearchGames = () => {
                   {game.esrb_rating ? <p><b>ESRB Rating:</b> {game.esrb_rating}</p> : null}
                   {game.genres ? <p><b>Genres:</b> {game.genres}</p> : null}
                   {game.platforms ? <p><b>Platforms:</b> {game.platforms}</p> : null}
+                </Card.Body>
+                <Card.Body style={{display: 'flex', flexDirection: 'column', justifyContent: 'flex-end'}}>
                   <Button variant="dark"
                       className='btn-block btn-info'
                       onClick={() => handleDescription(game.gameId)}>
