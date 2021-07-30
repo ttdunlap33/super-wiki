@@ -5,20 +5,32 @@
   ## Table of Contents
   
   [Description](#description)  
-  [Installation](#installation)
+  
+  [Technologies](#installation)
+  
   [Usage](#usage)  
+  
   [License](#license)  
+  
   [Contributing](#contributing)    
+  
   [Questions](#questions)
+  
   [Screenshots](#screenshots)  
   
   ## Description
   
   AS A frequent gamer, I WANT consolidated, easy to find information about video games SO THAT I can reference it whenever I log into my account.
 
-  ## Installation
+  ## Technologies
   
-  npm i
+  * MERN stack
+  * JavaScript
+  * Bootstrap
+  * GraphQL
+  * Apollo
+
+
   
   ## Usage
   
