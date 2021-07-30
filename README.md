@@ -9,7 +9,8 @@
   [Usage](#usage)  
   [License](#license)  
   [Contributing](#contributing)    
-  [Questions](#questions)  
+  [Questions](#questions)
+  [Screenshots](#screenshots)  
   
   ## Description
   
@@ -40,4 +41,8 @@
   Link to my Github: https://github.com/ttdunlap33
 
   Please send any questions here: ttdunlap33@gmail.com
-  
+
+  ## Screenshots
+  ![screenshot](client/public/gamehousesearch.png)
+
+  ![screenshot](client/public/gamehouseresults.png)
