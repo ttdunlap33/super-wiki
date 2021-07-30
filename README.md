@@ -46,3 +46,5 @@
   ![screenshot](client/public/gamehousesearch.png)
 
   ![screenshot](client/public/gamehouseresults.png)
+
+  ![screenshot](client/public/gamehousefavorites.png)
